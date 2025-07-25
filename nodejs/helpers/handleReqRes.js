@@ -2,7 +2,7 @@
 // dependencies 
 const url = require('url'); 
 const {StringDecoder} = require('string_decoder');
-const routes = require('./routes');
+const routes = require('../routes');
 const notFoundHandler = require('../handlers/routeHandlers/notFoundHandler');
 
 

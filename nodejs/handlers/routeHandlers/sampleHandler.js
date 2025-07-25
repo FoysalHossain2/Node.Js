@@ -1,8 +1,12 @@
 // 
-const sampleHandler = {};
+const handle = {};
 
-handle.sampleHandler = () => {
-    console.log('sample');
+handle.sampleHandler = (requestProperties, callback) => {
+    console.log(requestProperties); 
+
+    callback(200, {
+        message: 'this is a sample handler response',
+    });
 }
 
-module.exports = sampleHandler;
+module.exports = handle;
