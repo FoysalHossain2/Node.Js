@@ -51,12 +51,10 @@ handler.handleReqRes =  (req, res) => {
     req.on('end', () => {
         realData += decoder.end();
         console.log(realData);
+        // response handling
+        res.end('Hello programmer');
     })
 
-    console.log(headerObject);
-
-    // response handle
-    res.end('Hello programmer');
 }
 
-app.createServer(); 
+module.exports = handler;
