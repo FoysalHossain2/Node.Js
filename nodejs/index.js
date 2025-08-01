@@ -1,30 +1,33 @@
-// dependencies 
-const http = require('http');
-// const url = require('url'); 
-// const {StringDecoder} = require('string_decoder');
-// const { buffer } = require('stream/consumers');
-const handleReqRes = require('./helpers/handleReqRes');
-const environment = require('./helpers/environment');
+/*
+Title: Uptime  Monitoring Application
+Description: A Restful API to monitor up or down time of defined links 
+Author: Foysal Hossain
+Date: 08/1/2023
+*/
 
-//app object - module scaffolding 
+// Dependencies
+const  http = require('http');
+const url = require('url');
+const {handleReqRes}  = require('./helpers/handleReqRes');
+
+//app object - module scaffolding
 const app = {};
 
-// configuration
+//configuration 
 app.config = {
     port: 3000
-}; 
-
-// handleReqRes function
-app.handleReqRes = handleReqRes;
-
-
-
-// create server 
-app.createServer = () => {
-    const server = http.createServer(app.handleReqRes);
-    server.listen(environment.port, () => {
-        console.log(`listen to port ${environment.port}`);
-    });
 };
 
+//create server
+app.createServer = () => {
+    const server = http.createServer(app.handleReqRes);
+    server.listen(app.config.port), () => {
+        console.log(`Server is listening on port ${app.config.port}`);
+    }
+};
+
+//handle Request Responsive
+app.handleReqRes = handleReqRes;
+
+//start the server
 app.createServer();
