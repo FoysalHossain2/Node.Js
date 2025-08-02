@@ -9,6 +9,7 @@ Date: 08/1/2023
 const  http = require('http');
 const url = require('url');
 const {handleReqRes}  = require('./helpers/handleReqRes');
+const environment = require('./helpers/environments')
 
 //app object - module scaffolding
 const app = {};
@@ -21,8 +22,9 @@ app.config = {
 //create server
 app.createServer = () => {
     const server = http.createServer(app.handleReqRes);
-    server.listen(app.config.port), () => {
-        console.log(`Server is listening on port ${app.config.port}`);
+    server.listen(environment.port), () => {
+        // console.log(`environment variable is ${process.env.NODE_ENV}`);
+        console.log(`server is listening on port ${environment.port}`);
     }
 };
 

@@ -6,8 +6,12 @@
 // module scaffolding
 const handler = {};
 
-handler.notFoundHandler = () => {
-    console.log('not Found handler called');
+handler.notFoundHandler = (requestProperties, callback) => {
+    console.log(requestProperties);
+
+    callback(404, {
+        message: 'Your requested URL was not found',
+    })
 
 };
 
