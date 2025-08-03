@@ -10,9 +10,15 @@ const  http = require('http');
 const url = require('url');
 const {handleReqRes}  = require('./helpers/handleReqRes');
 const environment = require('./helpers/environments')
+const data = require('./lib/data');
 
 //app object - module scaffolding
 const app = {};
+
+// data.create('test', 'newFile',{'name': 'bangladesh', language: 'bangle'}, (err) => {
+//     console.log(`error was`, err);
+    
+// } )
 
 //configuration 
 app.config = {
@@ -22,10 +28,10 @@ app.config = {
 //create server
 app.createServer = () => {
     const server = http.createServer(app.handleReqRes);
-    server.listen(environment.port), () => {
+    server.listen(environment.port, () => {
         // console.log(`environment variable is ${process.env.NODE_ENV}`);
         console.log(`server is listening on port ${environment.port}`);
-    }
+    });
 };
 
 //handle Request Responsive
