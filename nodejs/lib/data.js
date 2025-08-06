@@ -84,5 +84,10 @@ lib.update = (dir, file, data, callback) => {
     } )
 }
 
+//delete data
+lib.delete = (dir, file, callback) => {
+    
+}
+
 
 module.exports = lib;
