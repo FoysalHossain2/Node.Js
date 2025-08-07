@@ -6,8 +6,9 @@
 //dependencies
 
 //module scaffolding 
+const crypto = require('crypto');
 const utilities = {};
-
+ 
 //parse JSON string to Object
 utilities.parseJSON = (jsonString) => {
     let output;
@@ -19,6 +20,18 @@ utilities.parseJSON = (jsonString) => {
     }
 
     return output
+}
+
+//hash string 
+utilities.hash = (str) => {
+   if (typeof(str) === 'string' && str.length > 0) {
+        let hash = crypto
+    .createHmac('sha256', 'hdjhrjdhrdfhdjf') // Using createHmac instead of createMmac
+    .update(str)
+    .digest('hex');
+
+
+   }
 }
 
 module.exports = utilities;
