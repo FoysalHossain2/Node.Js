@@ -8,6 +8,7 @@
 //module scaffolding 
 const crypto = require('crypto');
 const utilities = {};
+const environments = require('./environments');
  
 //parse JSON string to Object
 utilities.parseJSON = (jsonString) => {
@@ -26,12 +27,13 @@ utilities.parseJSON = (jsonString) => {
 utilities.hash = (str) => {
    if (typeof(str) === 'string' && str.length > 0) {
         let hash = crypto
-    .createHmac('sha256', 'hdjhrjdhrdfhdjf') // Using createHmac instead of createMmac
-    .update(str)
-    .digest('hex');
-
+            .createHmac('sha256', environments.secretKey) // Using createHmac instead of createMmac
+            .update(str)
+            .digest('hex');
+        return hash
 
    }
+   return false;
 }
 
 module.exports = utilities;

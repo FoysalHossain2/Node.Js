@@ -6,7 +6,8 @@
 
 //dependencies
 const { error } = require('console');
-const data = require('../../lib/data')
+const data = require('../../lib/data');
+const { hash } = require('../../helpers/utilities');
 
 //module scaffolding 
 const handler = {};
@@ -21,9 +22,9 @@ handler.userHandler = (requestProperties, callback) => {
     
 };
 
-handler.users = {}; 
+handler._users = {}; 
  
-handler.users.post = (requestProperties, callback) => {
+handler._users.post = (requestProperties, callback) => {
   const firstName = typeof(requestProperties.body.firstName) === 'string' && requestProperties.
   body.firstName.trim().length > 0 ? requestProperties.body.firstName : false;
 
@@ -41,13 +42,26 @@ handler.users.post = (requestProperties, callback) => {
 
   if (firstName && LastName && phone && password && tosAgreement) {
     //make sure that the user doesn't already exists
-    data.read('users', phone, (err, user) => {
-      if (err) {
+    data.read('users', phone, (err1, user) => {
+      if (err1) {
         let userObject = {
           firstName,
           LastName,
           phone,
+          password: hash(password),
+          tosAgreement
         }
+        //store the user to db
+        data.create('users', phone, userObject,(err2) => {
+          if (!err2) {
+            callback(200, {
+              'message': 'User was created successfully!',
+            })
+          } else {
+            callback(500, {'error': 'could nto carete user!'});
+          }
+        })
+
       } else {
         callback(500, {
           error: 'There was a problem in server side!',
@@ -63,15 +77,15 @@ handler.users.post = (requestProperties, callback) => {
 
 };
 
-handler.users.get = (requestProperties, callback) => {
+handler._users.get = (requestProperties, callback) => {
  
 };
 
-handler.users.put = (requestProperties, callback) => {
+handler._users.put = (requestProperties, callback) => {
    
 };
 
-handler.users.delete = (requestProperties, callback) => {
+handler._users.delete = (requestProperties, callback) => {
 
 };
 
