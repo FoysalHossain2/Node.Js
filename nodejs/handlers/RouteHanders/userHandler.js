@@ -8,6 +8,7 @@
 const { error } = require('console');
 const data = require('../../lib/data');
 const { hash } = require('../../helpers/utilities');
+const { parseJSON } = require('../../helpers/utilities');
 
 //module scaffolding 
 const handler = {};
@@ -28,7 +29,7 @@ handler._users.post = (requestProperties, callback) => {
   const firstName = typeof(requestProperties.body.firstName) === 'string' && requestProperties.
   body.firstName.trim().length > 0 ? requestProperties.body.firstName : false;
 
-  const LastName = typeof(requestProperties.body.LastName) === 'string' && requestProperties.
+  const lastName = typeof(requestProperties.body.LastName) === 'string' && requestProperties.
   body.LastName.trim().length > 0 ? requestProperties.body.LastName : false;
 
   const phone = typeof(requestProperties.body.phone) === 'string' && requestProperties.
@@ -46,7 +47,7 @@ handler._users.post = (requestProperties, callback) => {
       if (err1) {
         let userObject = {
           firstName,
-          LastName,
+          lastName,
           phone,
           password: hash(password),
           tosAgreement
@@ -78,11 +79,104 @@ handler._users.post = (requestProperties, callback) => {
 };
 
 handler._users.get = (requestProperties, callback) => {
- 
+ // check the phone number if valid
+    const phone = 
+    typeof(requestProperties.queryStringObject.phone) === 'string' && 
+    requestProperties.queryStringObject.phone.trim().length === 11 
+      ? requestProperties.queryStringObject.phone 
+      : false;
+
+  if (phone) {
+    //lookup the user 
+    data.read('user', phone, (err, u) => {
+      const user = { ...parseJSON(u)};
+      /*
+
+       */
+
+      if (!err && user) {
+        delete user.password;
+      } else {
+        callback(404, {
+             'error': 'Requested user wsa not found!'
+          });
+      }
+    })
+  } else {
+    callback(404, {
+      'error': 'Requested user wsa not found!'
+    });
+  }
+
 };
 
 handler._users.put = (requestProperties, callback) => {
-   
+  const phone = 
+    typeof(requestProperties.body.phone) === 'string' && 
+    requestProperties.body.phone.trim().length === 11 
+      ? requestProperties.body.phone 
+      : false;
+  const firstName = typeof(requestProperties.body.firstName) === 'string' && 
+      requestProperties.body.firstName.trim().length > 0 
+      ? requestProperties.body.firstName 
+      : false;
+
+  const lastName = typeof(requestProperties.body.LastName) === 'string' && 
+      requestProperties.body.LastName.trim().length > 0 
+      ? requestProperties.body.LastName 
+      : false;
+
+
+  const password = typeof(requestProperties.body.password) === 'string' && requestProperties.
+  body.password.trim().length == 11 ? requestProperties.body.password : false;
+
+  if (phone) {
+    if (firstName || lastName || password) {
+      // loopkup the user
+      data.read('user', phone, (err1, uData) => {
+        const userData = {...uData};
+        if (!err1 && userData) {
+          if (firstName) {
+            userData.firstName = firstName;
+          }
+          if (lastName) {
+            userData.firstName = lastName;
+          }
+          if (password) {
+             userData.password = hash.password;
+          }
+
+          //store to database
+          data.update('user', phone, userData, (err2) => {
+            if (!err2) {
+              callback(200, {
+                message: "User was updated successfully!",
+              })
+            } else {
+              callback(500, {
+                error: 'There was a problame in the server side!',
+              })
+            }
+          })
+        } else {
+            callback(400, {
+           error: "you have a problem in your request!"
+         })
+        }
+      })
+      
+    } else {
+      callback(400, {
+        error: "you have a problem in your request!"
+      })
+    }
+  } else {
+    callback(404, {
+      error: "Invalid phone number, Please try again"
+    });
+  }
+
+
 };
 
 handler._users.delete = (requestProperties, callback) => {
