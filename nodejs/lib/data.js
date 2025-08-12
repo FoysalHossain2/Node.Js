@@ -41,48 +41,41 @@ lib.create = function (dir,file, data, callback) {
 
 //read data from file
 lib.read = (dir, file, callback) => {
-    fs.readFile(`${lib.baseDir + dir} / ${file}.json`, 'utf8', (err, data) => {
-        callback(err, data)
+    fs.readFile(`${lib.baseDir + dir}/${file}.json`, 'utf8', (err, data) => {
+        callback(err, data);
     });
 }
 
 //update existing file
 lib.update = (dir, file, data, callback) => {
-    //file open for writhing 
-    fs.open(`${lib.baseDir + dir} / ${file}.json`, 'r+', (err, fileDescriptor) => {
+    fs.open(`${lib.baseDir + dir}/${file}.json`, 'r+', (err, fileDescriptor) => {
         if(!err && fileDescriptor){
-            //convert the data to string
             const stringData = JSON.stringify(data);
-
-            //truncate the file
             fs.ftruncate(fileDescriptor, (err1) => {
                 if(!err1){
-                    // wite to the file and close it
                     fs.writeFile(fileDescriptor, stringData, (err2) => {
                         if(!err2) {
-                            //close the file 
                             fs.close(fileDescriptor, (err3) => {
                                 if(!err3) {
-                                    callback(false);
+                                    callback(`${false} line60 on the data.js`);
                                 } else {
-                                    callback('Error closing file!')
-
+                                    callback('Error closing file!');
                                 }
-                            })
+                            });
                         } else {
-                            callback('Error writing to file!')
+                            callback('Error writing to file!');
                         }
-                    })
+                    });
                 } else {
-                    console.log('Error truncation file!');
+                    callback('Error truncating file!');
                 }
-             })
-
-        }else {
-            console.log(`Error updating. File may not exist`);
+             });
+        } else {
+            callback(`Error updating. File may not exist`);
         }
-    } )
+    });
 }
+
 
 //delete data
 lib.delete = (dir, file, callback) => {
