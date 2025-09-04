@@ -7,19 +7,24 @@ const app = express();
 app.use(express.json());
 
 //database connection with mongoose
-mongoose.connect("mongodb://localhost/todos", )
-    .then(() => console.log('connected to mongodb'))
-    .catch((err) => console.log(err))
+mongoose.connect('mongodb://localhost/todo')
+    .then(() => console.log("MongoDB connected"))
+    .catch(err => console.error(err));
+
 
 //application routes
+app.use('/todo', todoHandler);
 
-//default route handler
+//default error handler
 function errorHandler(err, req, res, next) {
     if (res.headerSent) {
         return next(err);
-    }
+    } 
+
+    res.status(5000).json({error: err});
 }
 
+
 app.listen(3000, () => {
-    console.log("app listening on port 3000");
+    console.log("app listing at port 3000");
 })
